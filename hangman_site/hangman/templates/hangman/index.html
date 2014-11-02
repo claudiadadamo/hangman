@@ -3,11 +3,11 @@
 <link rel="stylesheet" type="text/css" href="{% static 'hangman/style.css' %}" />
 
 	<p>{{word.guessed_letters}} </p>
+    <p> {{status}} </p>
     <ul>
 
     	
 		{% for w in word.current_state %}
-	        <!-- <li>{{w}}</li> -->
 	        <li>{{w}}</li>
 
 		{% endfor %}

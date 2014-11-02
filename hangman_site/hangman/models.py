@@ -8,6 +8,7 @@ class Game(models.Model):
 	guessed_letters = models.CharField(max_length=26,default='')
 	wrong_guesses = models.IntegerField(default=0)
 	current = models.BooleanField(default=False)
+	status = models.CharField(max_length=50, default="Guess a word")
 
 	def __str__(self):              # __unicode__ on Python 2
 		return self.word

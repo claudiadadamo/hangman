@@ -10,19 +10,18 @@ from django.views.decorators.csrf import csrf_protect
 import re
 
 def index(request):
-	# w = Game.objects.all()
 	# x = 'hippopotamus'
 	# g = Game(word=x,word_length=len(x),current_state='_'*len(x))
 	# g.save()
-	random_word = Game.objects.get(pk=1)
+	random_word = Game.objects.get(pk=2)
 	random_word.current = True
 	random_word.save()
-	word_chars = [c for c in random_word.current_state]
 	template = loader.get_template('hangman/index.html')
 	form = GuessForm()
 	context = RequestContext(request, {
         'word':random_word,
-        'form':form
+        'form':form,
+        'status':random_word.status
     })
 	return HttpResponse(template.render(context))
 
@@ -40,11 +39,11 @@ def get_guess(request):
 			print "wrong", current_game.wrong_guesses
 			print "word", current_game.word
 			print "prev guessed", current_game.guessed_letters
-			print ""
+			
 			if current_game.wrong_guesses == 10:
-				print "game over, you lose!"
+				current_game.status = "game over, you lose!"
 			if current_game.current_state == current_game.word:
-				print "you win! now to play another game..."
+				current_game.status = "you win! now to play another game..."
 				current_game.current = False
 				# CHANGE THIS LOGIC TO RANDOMLY CHOOSE A NEW WORD!!!
 				random_word = Game.objects.get(pk=1)
@@ -52,11 +51,12 @@ def get_guess(request):
 				random_word.save()
 			else:
 				if new_guess in current_game.guessed_letters:
-					print "you already guessed that letter, guess again."
+					current_game.status = "you already guessed that letter, guess again."
+					current_game.save()
 					return HttpResponseRedirect('/hangman/index.html', {'form': form})
 				else:
 					if new_guess in current_game.word:
-						print "success"
+						current_game.status = "nice, that letter was found. guess again."
 						char_list = list(current_game.current_state)
 						for m in re.finditer(new_guess,current_game.word):
 							x = m.start()
@@ -65,9 +65,10 @@ def get_guess(request):
 						current_game.guessed_letters = current_game.guessed_letters+new_guess
 						current_game.save()
 						print current_game.current_state
-						return HttpResponseRedirect('/hangman/index.html', {'form': form, 'word':current_game})
+						return HttpResponseRedirect('/hangman/index.html', {'form': form, 'word':current_game, 'status':current_game.status})
 
 					else:
+						current_game.status = "not found, guess again"
 						current_game.wrong_guesses += 1
 						current_game.guessed_letters = current_game.guessed_letters+new_guess
 						current_game.save()
