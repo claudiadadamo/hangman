@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_protect
 import re
 
 def index(request):
-	w = Game.objects.all()
+	# w = Game.objects.all()
 	# x = 'hippopotamus'
 	# g = Game(word=x,word_length=len(x),current_state='_'*len(x))
 	# g.save()
@@ -21,7 +21,7 @@ def index(request):
 	template = loader.get_template('hangman/index.html')
 	form = GuessForm()
 	context = RequestContext(request, {
-        'word': word_chars,
+        'word':random_word,
         'form':form
     })
 	return HttpResponse(template.render(context))
@@ -65,7 +65,7 @@ def get_guess(request):
 						current_game.guessed_letters = current_game.guessed_letters+new_guess
 						current_game.save()
 						print current_game.current_state
-						return HttpResponseRedirect('/hangman/index.html', {'form': form, 'word':current_game.current_state})
+						return HttpResponseRedirect('/hangman/index.html', {'form': form, 'word':current_game})
 
 					else:
 						current_game.wrong_guesses += 1
