@@ -5,7 +5,8 @@ from hangman import views
 
 
 urlpatterns = patterns('',
-    url(r'^$', views.index, name='index'),
+    url(r'index.html', views.index, name='index'),
+    url(r'get_guess/$', views.get_guess, name='get_guess'),
 )
 
 # urlpatterns = patterns('',

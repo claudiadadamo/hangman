@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'hangman/style.css' %}" />
+
+
+    <ul>
+		{% for w in word %}
+	        <!-- <li>{{w}}</li> -->
+	        <li>__</li>
+
+		{% endfor %}
+		<br>
+		<form action='/hangman/get_guess/' method='post'>
+			{% csrf_token %}
+			{% for field in form.visible_fields %}
+				{{ field }}
+
+			{% endfor %}
+			<input type='submit' value='enter'>
+		</form>
+	
+	</ul>

@@ -1,0 +1,8 @@
+ul li {
+    color: green;
+    display: inline;
+}
+
+ul {
+	list-style-type: none
+}
