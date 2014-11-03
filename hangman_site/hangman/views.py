@@ -3,25 +3,27 @@ from django.shortcuts import render
 # Create your views here.
 from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect
-from hangman.models import Game
+from hangman.models import Game, Stats
 from django import forms
 from hangman.forms import GuessForm
 from django.views.decorators.csrf import csrf_protect
 import re
 
-def index(request):
-	# x = 'hippopotamus'
+
+	# for x in ['banana','apple','hippopotamus']:
 	# g = Game(word=x,word_length=len(x),current_state='_'*len(x))
 	# g.save()
-	random_word = Game.objects.get(pk=2)
-	random_word.current = True
-	random_word.save()
+
+def index(request):
+	
+	random_word = Game.objects.get(pk=1)
 	template = loader.get_template('hangman/index.html')
 	form = GuessForm()
 	context = RequestContext(request, {
         'word':random_word,
         'form':form,
         'status':random_word.status
+
     })
 	return HttpResponse(template.render(context))
 
@@ -30,49 +32,37 @@ def get_guess(request):
 	if request.method == 'POST':
 		form = GuessForm(request.POST)
 		if form.is_valid():
-			# logipc - save to database 
 			print "hi"
-			wins = 0
-			losses = 0
 			new_guess = request.POST.get("guess")
 			# if new_guess in 
 			print new_guess
-			current_game = Game.objects.get(current=True)
+			current_game = Game.objects.get(pk=1)
 			print "wrong", current_game.wrong_guesses
 			print "word", current_game.word
 			print "current: ", current_game.current_state
-
 			print "prev guessed", current_game.guessed_letters
-			
 			
 			if current_game.wrong_guesses == 10:
 				current_game.status = "game over, you lose! new game!"
-				losses += 1
-				current_game.current = False
-				current_game.save()
+				# losses +=1
 				random_word = Game.objects.get(pk=1)
-				random_word.current = True
-				random_word.save()
+
 				return HttpResponseRedirect('/hangman/index.html', {'form': form, 
 							'word':random_word, 
-							'status':random_word.status, 
-							'wins':wins, 
-							'losses':losses})
+							'status':random_word.status
+							})
 
 			elif current_game.current_state == current_game.word:
 				current_game.status = "you win! now to play another game..."
-				wins +=1
-				current_game.current = False
-				current_game.save()
+				# wins +=1
+
 				# CHANGE THIS LOGIC TO RANDOMLY CHOOSE A NEW WORD!!!
 				random_word = Game.objects.get(pk=1)
-				random_word.current = True
-				random_word.save()
+
 				return HttpResponseRedirect('/hangman/index.html', {'form': form, 
 							'word':random_word, 
 							'status':random_word.status, 
-							'wins':wins, 
-							'losses':losses})
+							})
 			else:
 				if new_guess in current_game.guessed_letters:
 					# if they already guessed that letter
@@ -95,8 +85,7 @@ def get_guess(request):
 						return HttpResponseRedirect('/hangman/index.html', {'form': form, 
 							'word':current_game, 
 							'status':current_game.status, 
-							'wins':wins, 
-							'losses':losses})
+							})
 
 					else:
 						# if they guess a word that is not in the string
