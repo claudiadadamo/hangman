@@ -16,7 +16,7 @@ import re
 
 def index(request):
 	
-	random_word = Game.objects.get(pk=1)
+	random_word = Game.objects.get(current=True)
 	template = loader.get_template('hangman/index.html')
 	form = GuessForm()
 	context = RequestContext(request, {
@@ -36,7 +36,7 @@ def get_guess(request):
 			new_guess = request.POST.get("guess")
 			# if new_guess in 
 			print new_guess
-			current_game = Game.objects.get(pk=1)
+			current_game = Game.objects.get(current=True)
 			print "wrong", current_game.wrong_guesses
 			print "word", current_game.word
 			print "current: ", current_game.current_state
@@ -45,30 +45,22 @@ def get_guess(request):
 			if current_game.wrong_guesses == 10:
 				current_game.status = "game over, you lose! new game!"
 				# losses +=1
-				random_word = Game.objects.get(pk=1)
-
-				return HttpResponseRedirect('/hangman/index.html', {'form': form, 
-							'word':random_word, 
-							'status':random_word.status
-							})
+				
+				# random_word = Game.objects.get(pk=1)
 
 			elif current_game.current_state == current_game.word:
 				current_game.status = "you win! now to play another game..."
 				# wins +=1
-
+				
 				# CHANGE THIS LOGIC TO RANDOMLY CHOOSE A NEW WORD!!!
-				random_word = Game.objects.get(pk=1)
+				# random_word = Game.objects.get(pk=1)
 
-				return HttpResponseRedirect('/hangman/index.html', {'form': form, 
-							'word':random_word, 
-							'status':random_word.status, 
-							})
 			else:
 				if new_guess in current_game.guessed_letters:
 					# if they already guessed that letter
 					current_game.status = "you already guessed that letter, guess again."
 					current_game.save()
-					return HttpResponseRedirect('/hangman/index.html', {'form': form})
+
 				else:
 					# if they guess a letter that wasn't previously guessed
 					if new_guess in current_game.word:
@@ -82,10 +74,6 @@ def get_guess(request):
 						current_game.guessed_letters = current_game.guessed_letters+new_guess
 						current_game.save()
 						print current_game.current_state
-						return HttpResponseRedirect('/hangman/index.html', {'form': form, 
-							'word':current_game, 
-							'status':current_game.status, 
-							})
 
 					else:
 						# if they guess a word that is not in the string
