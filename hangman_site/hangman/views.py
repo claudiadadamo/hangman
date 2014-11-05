@@ -7,7 +7,7 @@ from hangman.models import Game, Stats
 from django import forms
 from hangman.forms import GuessForm
 from django.views.decorators.csrf import csrf_protect
-import re
+import re, random
 
 
 	# for x in ['banana','apple','hippopotamus']:
@@ -45,13 +45,32 @@ def get_guess(request):
 			if current_game.wrong_guesses == 10:
 				current_game.status = "game over, you lose! new game!"
 				# losses +=1
-				
+				current_game.guessed_letters=""
+				current_game.current_state='_'*current_game.word_length
+				current_game.current = False
+				current_game.save()
+
+				idnum = random.randint(1, Game.objects.all().count())
+				print idnum
+				next_game = Game.objects.get(pk=idnum)
+				next_game.current = True
+				next_game.save()
+
 				# random_word = Game.objects.get(pk=1)
 
 			elif current_game.current_state == current_game.word:
 				current_game.status = "you win! now to play another game..."
 				# wins +=1
-				
+				current_game.guessed_letters=""
+				current_game.current_state='_'*current_game.word_length
+				current_game.current = False
+				current_game.save()
+
+				idnum = random.randint(1, Game.objects.all().count())
+				print idnum
+				next_game = Game.objects.get(pk=idnum)
+				next_game.current = True
+				next_game.save()
 				# CHANGE THIS LOGIC TO RANDOMLY CHOOSE A NEW WORD!!!
 				# random_word = Game.objects.get(pk=1)
 
