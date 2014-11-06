@@ -8,6 +8,7 @@ from django import forms
 from hangman.forms import GuessForm
 from django.views.decorators.csrf import csrf_protect
 import re, random
+from django.db.models import Sum
 
 
 	# for x in ['banana','apple','hippopotamus']:
@@ -22,7 +23,9 @@ def index(request):
 	context = RequestContext(request, {
         'word':random_word,
         'form':form,
-        'status':random_word.status
+        'status':random_word.status,
+        'wins':Game.objects.aggregate(Sum('wins'))['wins__sum'],
+        'losses':Game.objects.aggregate(Sum('losses'))['losses__sum']
 
     })
 	return HttpResponse(template.render(context))
@@ -47,6 +50,7 @@ def get_guess(request):
 				# losses +=1
 				current_game.guessed_letters=""
 				current_game.current_state='_'*current_game.word_length
+				current_game.losses += 1
 				current_game.current = False
 				current_game.save()
 
@@ -63,6 +67,7 @@ def get_guess(request):
 				# wins +=1
 				current_game.guessed_letters=""
 				current_game.current_state='_'*current_game.word_length
+				current_game.wins += 1
 				current_game.current = False
 				current_game.save()
 
