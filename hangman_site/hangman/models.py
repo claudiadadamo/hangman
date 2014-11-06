@@ -8,7 +8,7 @@ class Game(models.Model):
 	guessed_letters = models.CharField(max_length=26,default='')
 	wrong_guesses = models.IntegerField(default=0)
 	current = models.BooleanField(default=False)
-	status = models.CharField(max_length=50, default="Guess a word")
+	status = models.CharField(max_length=50, default="Guess a letter")
 	wins = models.IntegerField(default=0)
 	losses = models.IntegerField(default=0)
 
