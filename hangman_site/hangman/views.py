@@ -11,7 +11,7 @@ import re, random
 from django.db.models import Sum
 
 
-	# for x in ['banana','apple','hippopotamus']:
+	# for x in ['banana','apple','babies']:
 	# g = Game(word=x,word_length=len(x),current_state='_'*len(x))
 	# g.save()
 
@@ -20,8 +20,8 @@ def new_game():
 	print idnum
 	next_game = Game.objects.get(pk=idnum)
 	next_game.current = True
-	if next_game.status == "game over, you lose! new game!" or next_game.status == "you win! now to play another game...":
-		next_game.status= "Guess a letter"
+	# if next_game.status == "game over, you lose! new game!" or next_game.status == "you win! now to play another game...":
+		# next_game.status= "Guess a letter"
 	next_game.save()
 
 def reset_game(game_type):
@@ -34,6 +34,7 @@ def reset_game(game_type):
 	current_game.guessed_letters=""
 	current_game.current_state='_'*current_game.word_length
 	current_game.wrong_guesses = 0
+	current_game.status = "New Game - Guess a letter"
 	current_game.current = False
 	current_game.save()
 
@@ -96,17 +97,19 @@ def get_guess(request):
 
 				else:
 					# if they guess a word that is not in the string
-					current_game.status = "not found, guess again"
-					current_game.wrong_guesses += 1
-					current_game.guessed_letters = current_game.guessed_letters+new_guess
-					current_game.save()
+						current_game.status = "not found, guess again"
+						current_game.wrong_guesses += 1
+						current_game.guessed_letters = current_game.guessed_letters+new_guess
+						current_game.save()
 
-					if current_game.wrong_guesses == 10:
-						current_game.status = "game over, you lose! new game!"
-						# losses +=1
+						if current_game.wrong_guesses == 10:
+							current_game.status = "game over, you lose! new game!"
+							# losses +=1
 
-						reset_game('losses')
-						new_game()
+							reset_game('losses')
+							new_game()
+
+						
 
 			# reset form
 			form = GuessForm()
