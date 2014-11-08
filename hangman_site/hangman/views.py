@@ -15,13 +15,16 @@ from django.db.models import Sum
 	# g = Game(word=x,word_length=len(x),current_state='_'*len(x))
 	# g.save()
 
-def new_game():
+def new_game(game_status, word):
 	idnum = random.randint(1, Game.objects.all().count())
 	print idnum
 	next_game = Game.objects.get(pk=idnum)
+	if game_status == 'won':
+		next_game.status = "you won! New game."
+	else:
+		next_game.status = "you lost! word was "+word+". new game."
+
 	next_game.current = True
-	# if next_game.status == "game over, you lose! new game!" or next_game.status == "you win! now to play another game...":
-		# next_game.status= "Guess a letter"
 	next_game.save()
 
 def reset_game(game_type):
@@ -49,7 +52,8 @@ def index(request):
         'form':form,
         'status':random_word.status,
         'wins':Game.objects.aggregate(Sum('wins'))['wins__sum'],
-        'losses':Game.objects.aggregate(Sum('losses'))['losses__sum']
+        'losses':Game.objects.aggregate(Sum('losses'))['losses__sum'],
+        'wrong':random_word.wrong_guesses
 
     })
 	return HttpResponse(template.render(context))
@@ -92,7 +96,7 @@ def get_guess(request):
 						current_game.status = "you win! now to play another game..."
 						# wins +=1
 						reset_game('wins')
-						new_game()
+						new_game('won', current_game.word)
 
 
 				else:
@@ -107,7 +111,7 @@ def get_guess(request):
 							# losses +=1
 
 							reset_game('losses')
-							new_game()
+							new_game('lose', current_game.word)
 
 						
 
