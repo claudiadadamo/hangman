@@ -1,21 +1,28 @@
 {% load staticfiles %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'hangman/style.css' %}" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
+<head>
+	<title>Hangman</title>
+
+</head>
+
+<body>
+
+	<center><img src='{{STATIC_URL}}hangman/media/{{wrong}}_wrong.png' height=300px><center>
 	<p>{{word.guessed_letters}} </p>
     <p> {{status}} </p>
     <p> wins: {{wins}} </p>
     <p> losses: {{losses}} </p>
     <p> wrong: {{wrong}}</p>
-    <img src='{{STATIC_URL}}hangman/media/{{wrong}}_wrong.png' height=100px>
+    
     <ul>
-
-    	
 		{% for w in word.current_state %}
 	        <li>{{w}}</li>
 
 		{% endfor %}
-		<br>
+		<br><br>
 		<form action='/hangman/get_guess/' method='post'>
 			{% csrf_token %}
 			{% for field in form.visible_fields %}
@@ -26,3 +33,5 @@
 		</form>
 	
 	</ul>
+
+</body>
