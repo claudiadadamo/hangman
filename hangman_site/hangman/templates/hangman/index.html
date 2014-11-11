@@ -9,31 +9,44 @@
 </head>
 
 <body>
+	<div id="winloss">
+		<p> wins: {{wins}} </p>
+	    <p> losses: {{losses}} </p>
 
-	<center><img src='{{STATIC_URL}}hangman/media/{{wrong}}_wrong.png' height=300px><center>
-	<p>{{word.guessed_letters}} </p>
-    <p> {{status}} </p>
-    <p> wins: {{wins}} </p>
-    <p> losses: {{losses}} </p>
-    <p> wrong: {{wrong}}</p>
-    
-    <ul>
-		{% for w in word.current_state %}
-	        <li>{{w}}</li>
+	</div>
+	<center>
+	<p> {{status}} </p>
+	<img src='{{STATIC_URL}}hangman/media/{{wrong}}_wrong.png' height=300px></center>
 
-		{% endfor %}
-		<br><br>
-		<form action='/hangman/get_guess/' method='post'>
-			{% csrf_token %}
-			{% for field in form.visible_fields %}
-				{{ field }}
+	<div id="game_stats"><center>
+	    
+	    <ul>
+			{% for w in word.current_state %}
+		        <li>{{w}}</li>
 
 			{% endfor %}
-			<input type='submit' value='enter'>
+			<br><br>
+			<p>you have guessed: {{word.guessed_letters}} </p>
+	 	   	
+	    </ul>
+	 	   	<p> wrong: {{wrong}}</p>
+	</div>
+	<div id="inputs"><center>
+			<form action='/hangman/get_guess/' method='post'>
+				{% csrf_token %}
+				{% for field in form.visible_fields %}
+					{{ field }}
 
-			<input type="submit" value="reset wins/losses" name="reset" />
-		</form>
+				{% endfor %}
 	
-	</ul>
+		
+			<input class='button' type='submit' value='enter'>
+			<br>
+			<input class='button' type="submit" value="reset wins/losses" name="reset" />
+		</form>
+		<center>
+	</div>
+	
+	
 
 </body>
