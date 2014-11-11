@@ -61,9 +61,15 @@ def index(request):
 @csrf_protect
 def get_guess(request):
 	if request.method == 'POST':
+		print request.POST
 		form = GuessForm(request.POST)
+		if 'reset' in request.POST:
+				print "it's here!"
+				for game in Game.objects.all():
+					game.wins = 0
+					game.losses = 0
+					game.save()
 		if form.is_valid():
-			print "hi"
 			new_guess = request.POST.get("guess")
 			# if new_guess in 
 			print new_guess
