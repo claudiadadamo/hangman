@@ -16,7 +16,7 @@ def new_game(game_status, word):
 
 	next_game = Game.objects.get(pk=idnum)
 	if game_status == 'won':
-		next_game.status = "you won! New game."
+		next_game.status = "you won! new game."
 	else:
 		next_game.status = "you lost! word was "+word+". new game."
 
@@ -33,7 +33,7 @@ def reset_game(game_type):
 	current_game.guessed_letters=""
 	current_game.current_state='_'*current_game.word_length
 	current_game.wrong_guesses = 0
-	current_game.status = "New Game - Guess a letter"
+	current_game.status = "new game - guess a letter"
 	current_game.current = False
 	current_game.save()
 

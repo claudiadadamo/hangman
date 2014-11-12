@@ -1,12 +1,10 @@
 ul li {
     color: black;
     display: inline;
-    font-size: 24px;  
+    font-size: 28px;  
     font-family: 'Open Sans', sans-serif;
-    text-align: left;
-    margin: 0;
-    padding: 0;
-    list-style-type: non
+    list-style-type: none;
+    font-family: Courier;
 }
 
 ul {
@@ -18,6 +16,7 @@ ul {
 p {
 	font-size: 20px;
 	font-family: 'Open Sans', sans-serif;
+
 }
 
 body{
@@ -39,17 +38,20 @@ body{
   	border-top-right-radius: 5px;
 }
 
+
 #container{
 	padding-top:.5em;
 	background-color:white;
 	padding-bottom: .5em;
 	padding-left: 1em;
 	padding-top: .5em;
+  padding-right: 1em;
 	border-bottom-right-radius: 8px;
   	border-top-left-radius: 8px;
   	border-bottom-left-radius: 8px;
   	border-top-right-radius: 8px;
   	margin-left:auto;
   	margin-right: auto;
+    margin-right:auto;
 
 }
