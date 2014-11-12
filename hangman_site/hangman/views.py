@@ -11,13 +11,9 @@ import re, random
 from django.db.models import Sum
 
 
-	# for x in ['banana','apple','babies']:
-	# g = Game(word=x,word_length=len(x),current_state='_'*len(x))
-	# g.save()
-
 def new_game(game_status, word):
 	idnum = random.randint(1, Game.objects.all().count())
-	print idnum
+
 	next_game = Game.objects.get(pk=idnum)
 	if game_status == 'won':
 		next_game.status = "you won! New game."
@@ -61,23 +57,18 @@ def index(request):
 @csrf_protect
 def get_guess(request):
 	if request.method == 'POST':
-		print request.POST
+
 		form = GuessForm(request.POST)
 		if 'reset' in request.POST:
-				print "it's here!"
-				for game in Game.objects.all():
-					game.wins = 0
-					game.losses = 0
-					game.save()
+			for game in Game.objects.all():
+				game.wins = 0
+				game.losses = 0
+				game.save()
+
 		if form.is_valid():
 			new_guess = request.POST.get("guess")
-			# if new_guess in 
-			print new_guess
+
 			current_game = Game.objects.get(current=True)
-			print "wrong", current_game.wrong_guesses
-			print "word", current_game.word
-			print "current: ", current_game.current_state
-			print "prev guessed", current_game.guessed_letters
 
 			if new_guess in current_game.guessed_letters:
 				# if they already guessed that letter
@@ -98,6 +89,7 @@ def get_guess(request):
 					current_game.save()
 					print current_game.current_state
 
+					# if the current game state is the same as the word, then they have won!
 					if current_game.current_state == current_game.word:
 						current_game.status = "you win! now to play another game..."
 						# wins +=1
@@ -118,8 +110,6 @@ def get_guess(request):
 
 							reset_game('losses')
 							new_game('lose', current_game.word)
-
-						
 
 			# reset form
 			form = GuessForm()
