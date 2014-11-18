@@ -87,7 +87,6 @@ def get_guess(request):
 					current_game.current_state = "".join(char_list)
 					current_game.guessed_letters = current_game.guessed_letters+new_guess
 					current_game.save()
-					print current_game.current_state
 
 					# if the current game state is the same as the word, then they have won!
 					if current_game.current_state == current_game.word:
